@@ -9,13 +9,14 @@
 
 # Tasks
 - [x] Basic add a task to a list
-- [ ] Add a task with description, date, due date, priority
-    - [ ] Create a prompt
+- [x] Add a task with description, date, due date, priority
+    - [x] Create a prompt
     - [ ] Create a CLI one line command for this
 - [ ] Load the tasklist into memory in a meaningful way
 - [x] List existing tasks
 - [ ] List existing tasks by some sorting
 
+    
     
     
 # Implementation Ideas
