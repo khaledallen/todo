@@ -1,3 +1,14 @@
+Run with `python3 todo.py` + various commands (eg `python3 todo.py add -t [TASKNAME]` or `python3 todo.py add`).
+Test with the `unittest` modules. Eg, `python3 task_class_test.py` will run the tests in that module.
+
+# Dev Process
+
+1. First, create the method/class you want to build, but have it return empty.
+2. Then add a test case that checks to see if the method does what you want it to do. If you're expanding an existing class, add a test case to the relevant unit test. If you're making a new class, add a dedicated class.
+3. Edit your method so that it passes the test. Do this in the simplest, most straightforward way possible.
+4. Optimize your method
+5. Repeat with additional functionality for the method or each new method.
+
 # Requirements
 
 - [ ] Create and maintain a todo list
