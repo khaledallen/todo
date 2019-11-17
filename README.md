@@ -1,11 +1,14 @@
-# Requirements
+# Features
 
 - [ ] Create and maintain a todo list
+- [ ] User can set an action that `todo do` will execute in the shell    
+- [ ] Todolist can check if a task is similar to an existing one and let the user know it's already on the list or allow bumping it     
 - [ ] Create and maintain arbitrary lists in various categories
 - [ ] Set priority for tasks
 - [ ] Display tasks by category and/or by priority
 - [ ] Set details for tasks
 - [ ] Set due dates for tasks and call up tasks by due date
+
 
 # Tasks
 - [x] Basic add a task to a list
