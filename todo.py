@@ -24,7 +24,7 @@ class Task:
             return date.today()
         elif due_date_string == 'tomorrow':
             return date.today() + timedelta(1)
-        elif due_date_string != None:
+        elif due_date_string != None and due_date_string != '':
             month = int(due_date_string[:2])
             day = int(due_date_string[3:5])
             if len(due_date_string) == 10:
@@ -37,7 +37,7 @@ class Task:
         return 
 
     def process_priority(self, priority_string = None):
-        if priority_string == None:
+        if priority_string == None or priority_string == '':
             return Priority.NONE
         if priority_string[0].lower() == 'h':
             return Priority.HIGH

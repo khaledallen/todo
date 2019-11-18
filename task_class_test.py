@@ -11,6 +11,8 @@ class TestTaskMethods(unittest.TestCase):
         with self.subTest():
             self.assertEqual(task.process_due_date(), None )
         with self.subTest():
+            self.assertEqual(task.process_due_date(''), None )
+        with self.subTest():
             self.assertEqual(task.process_due_date('today'), date.today() )
         with self.subTest():
             self.assertEqual(task.process_due_date('tomorrow'), date.today() + timedelta(1))
@@ -25,6 +27,8 @@ class TestTaskMethods(unittest.TestCase):
         task = Task()
         with self.subTest():
             self.assertEqual(task.process_priority(), Priority.NONE)
+        with self.subTest():
+            self.assertEqual(task.process_priority(''), Priority.NONE)
         with self.subTest():
             self.assertEqual(task.process_priority('H'), Priority.HIGH)
         with self.subTest():
