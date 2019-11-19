@@ -25,9 +25,9 @@ Test with the `unittest` modules. Eg, `python3 task_class_test.py` will run the 
 - [x] Basic add a task to a list
 - [x] Add a task with description, date, due date, priority
     - [x] Create a prompt
-    - [ ] Create a CLI one line command for this
+    - [x] Create a CLI one line command for this
 - [ ] Implement category/lists
-- [ ] Load the tasklist into memory in a meaningful way
+- [x] Load the tasklist into memory in a meaningful way
 - [x] List existing tasks
 - [ ] List existing tasks by some sorting
 - [x] Set priority for tasks
