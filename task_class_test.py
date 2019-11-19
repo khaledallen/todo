@@ -27,6 +27,8 @@ class TestTaskMethods(unittest.TestCase):
             self.assertEqual(task.process_due_date('11/30'), date(2019, 11, 30))
         with self.subTest():
             self.assertEqual(task.process_due_date('1/30'), date(2019, 1, 30))
+        with self.subTest():
+            self.assertEqual(task.process_due_date('2019-1-01'), date(2019, 1, 1))
 
     def test_process_priority(self):
         task = Task()

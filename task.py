@@ -17,15 +17,21 @@ class Task:
             return date.today() + timedelta(1)
         elif due_date_string != None and due_date_string != '' and due_date_string != 'None':
             date_array = due_date_string.split('/')
-            month = int(date_array[0])
-            day = int(date_array[1])
-            if len(date_array) == 3:
-                if len(date_array[2]) == 4:
-                    year = int(date_array[2])
-                elif len(date_array[2]) == 2:
-                    year = 2000 + int(date_array[2])
+            if len(date_array) > 1:
+                month = int(date_array[0])
+                day = int(date_array[1])
+                if len(date_array) == 3:
+                    if len(date_array[2]) == 4:
+                        year = int(date_array[2])
+                    elif len(date_array[2]) == 2:
+                        year = 2000 + int(date_array[2])
+                else:
+                    year = date.today().year
             else:
-                year = date.today().year
+                date_array = due_date_string.split('-')
+                year = int(date_array[0])
+                month = int(date_array[1])
+                day = int(date_array[2])
             return date(year, month, day)
         return 
 
