@@ -90,26 +90,25 @@ class TestDatabaseManagerMethods(unittest.TestCase):
                 details TEXT,
                 list TEXT,
                 complete INTEGER)''')
-        c.execute('INSERT INTO tasks (name, due_date, priority, details, list, complete) value (?, ?, ?, ?, ?, ?)', (
-            task.name,
+        c.execute('INSERT INTO tasks (name, due_date, priority, details, list, complete) VALUES (?, ?, ?, ?, ?, ?)', 
+            (task.name,
             task.due_date,
             task.priority.value,
             task.details,
             task.list,
-            int(task.complete)
-            )
-            conn.commit()
-            conn.close()
+            int(task.complete)))
+        conn.commit()
+        conn.close()
 
-            dbm = DBManager('test.db')
-            task_from_db = dbm.get_task(1)
-            self.assertEqual(task_from_db.name, task.name)
+        dbm = DBManager('test.db')
+        task_from_db = dbm.get_task(1)
+        self.assertEqual(task_from_db.name, task.name)
 
-            conn = sqlite3.connect('test.db', detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
-            c = conn.cursor()
-            c.execute('DROP TABLE tasks') 
-            conn.commit()
-            conn.close()
+        conn = sqlite3.connect('test.db', detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+        c = conn.cursor()
+        c.execute('DROP TABLE tasks') 
+        conn.commit()
+        conn.close()
 
 if __name__ == '__main__':
     unittest.main()

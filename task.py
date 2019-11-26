@@ -20,6 +20,8 @@ class Task:
         self.complete = complete
 
     def process_due_date(self, due_date_string = None):
+        if type(due_date_string) == date:
+            return due_date_string
         if due_date_string == 'today':
             return date.today()
         elif due_date_string == 'tomorrow':

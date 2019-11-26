@@ -14,6 +14,8 @@ class TestTaskMethods(unittest.TestCase):
         with self.subTest():
             self.assertEqual(task.process_due_date(''), None )
         with self.subTest():
+            self.assertEqual(task.process_due_date(date.today()), date.today())
+        with self.subTest():
             self.assertEqual(task.process_due_date('None'), None )
         with self.subTest():
             self.assertEqual(task.process_due_date('today'), date.today() )

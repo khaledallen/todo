@@ -25,7 +25,7 @@ class DBManager:
         conn.close()
 
     def get_all(self):
-        conn = self.connection
+        conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
         c = conn.cursor()
         tasks = c.execute('SELECT * FROM tasks')
         task_list = []
@@ -43,7 +43,7 @@ class DBManager:
         return task_list
 
     def add_task(self, task):
-        conn = self.connection
+        conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
         c = conn.cursor()
         c.execute('INSERT INTO tasks (name, due_date, priority, details, list, complete) VALUES (?, ?, ?, ?, ?, ?)',
                     (task.name,
@@ -56,8 +56,12 @@ class DBManager:
         conn.close()
 
     def get_task(self, task_id):
-        conn = sqlite3.connect(self.database_name)
-        print('not implemented')
+        conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
+        c = conn.cursor()
+        t = c.execute('SELECT * FROM tasks WHERE id=?', str(task_id)).fetchone()
+        task = Task(t[0], t[1], t[2], t[3], t[4], t[5], t[6])
+        conn.close()
+        return task
 
     def update_task(self, task):
         print('not implemented')
