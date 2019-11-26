@@ -116,6 +116,7 @@ def record():
     return sample_width, r
 
 def recognize(filename):
+    '''NOTE that we need to set the environment variable manually for this to work'''
     client = speech.SpeechClient()
     file_name = os.path.join( os.path.dirname(__file__), filename)
 
