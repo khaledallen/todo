@@ -11,13 +11,29 @@ class Task:
             details = None,
             list = None,
             complete = False):
-        self.id = None  #this is always set by the database
+        self.id = id  #this is always set by the database
         self.name = name
         self.due_date = self.process_due_date(due_date)
         self.priority = self.process_priority(priority)
         self.details = details
         self.list = list
         self.complete = complete
+
+    def __str__(self):
+        return '{} Due: {}, {}, Details: {}, List: {}, Complete: {}'.format(self.name, self.due_date, self.priority, self.details, self.list, self.complete)
+
+    def print_abbrv(self):
+        completed = u'\u2713' if self.complete else ' '
+        if self.priority is Priority.HIGH:
+            priority_sym = '!'
+        elif self.priority is Priority.MEDIUM:
+            priority_sym = '-'
+        elif self.priority is Priority.LOW:
+            priority_sym = '_'
+        elif self.priority is Priority.NONE:
+            priority_sym = ' '
+        return '({0:04}) {1:1} [{2:1}] - {3:30}{4:>9}'.format(self.id, priority_sym, completed, self.name, self.due_date.strftime('%D'), align='right')
+
 
     def process_due_date(self, due_date_string = None):
         if type(due_date_string) == date:

@@ -64,7 +64,28 @@ class DBManager:
         return task
 
     def update_task(self, task):
-        print('not implemented')
+        print(task.id)
+        conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
+        c = conn.cursor()
+        t = c.execute('''UPDATE tasks 
+                            SET name=?,
+                                due_date=?,
+                                priority=?,
+                                details=?,
+                                list=?,
+                                complete=?
+                            WHERE id=?''',
+                            (task.name, 
+                            task.due_date.strftime('%Y-%m-%d'),
+                            task.priority.value,
+                            task.details,
+                            task.list,
+                            int(task.complete),
+                            str(task.id))) 
+        task = self.get_task(task.id)
+        conn.commit()
+        conn.close()
+        return task
 
     def delete_task(self, task):
         print('not implemented')

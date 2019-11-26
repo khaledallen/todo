@@ -6,12 +6,12 @@ from task import Task
 from priority import Priority
 from taskmanager import TaskManager
 
-FILENAME = os.path.join('todolist.txt')
+DBNAME = 'todo.db'
 
 def main():
-    task_manager = TaskManager(FILENAME)
+    task_manager = TaskManager(DBNAME)
     parser = argparse.ArgumentParser(description='Manage your todo list.')
-    parser.add_argument('action', action='store', choices=['add', 'list', 'complete'])
+    parser.add_argument('action', action='store', choices=['add', 'list', 'complete', 'do'])
     parser.add_argument('-t', action='store')
     parser.add_argument('-d', action='store')
     parser.add_argument('-p', action='store')
@@ -23,6 +23,10 @@ def main():
         task_manager.add(args.t, args.d, args.p, args.e)
     elif args.action == 'list':
         task_manager.list()
+    elif args.action == 'do':
+        task_manager.do(args.t)
+    elif args.action == 'complete':
+        task_manager.complete(args.t)
 
 if __name__ == "__main__":
     main()
