@@ -20,9 +20,9 @@ def main():
 
     args = parser.parse_args();
     if args.action == 'add':
-        add(args.t, args.d, args.p, args.e)
+        task_manager.add(args.t, args.d, args.p, args.e)
     elif args.action == 'list':
-        list()
+        task_manager.list()
 
 if __name__ == "__main__":
     main()

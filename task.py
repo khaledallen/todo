@@ -9,6 +9,7 @@ class Task:
         self.priority = self.process_priority(priority)
         self.details = details
         self.list = list
+        self.complete = False
 
     def process_due_date(self, due_date_string = None):
         if due_date_string == 'today':
@@ -35,21 +36,17 @@ class Task:
             return date(year, month, day)
         return 
 
-    def process_priority(self, priority_string = None):
-        if priority_string == None or priority_string == '' or priority_string == 'None':
+    def process_priority(self, priority_input = None):
+        if type(priority_input) == Priority:
+            return priority_input
+        if type(priority_input) == int:
+            return Priority(priority_input)
+        if priority_input == None or priority_input == '' or priority_input == 'None':
             return Priority.NONE
-        if priority_string[0].lower() == 'h':
+        if priority_input[0].lower() == 'h':
             return Priority.HIGH
-        if priority_string[0].lower() == 'm':
+        if priority_input[0].lower() == 'm':
             return Priority.MEDIUM
-        if priority_string[0].lower() == 'l':
+        if priority_input[0].lower() == 'l':
             return Priority.LOW
-
-    def to_entry_string(self):
-        return '{name}:{due_date}:{priority}:{details}'.format(
-                    name = self.name,
-                    due_date = self.due_date,
-                    priority = self.priority,
-                    details = self.details
-                )
 

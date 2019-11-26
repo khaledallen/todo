@@ -19,7 +19,7 @@ class TaskManager:
             list_category = task.list
             self.tasks[list_category] = task
 
-    def add(task_name = None, task_due_date = None, task_priority = None, task_details = None):
+    def add(self, task_name = None, task_due_date = None, task_priority = None, task_details = None):
         print(task_name, task_due_date, task_priority, task_details)
         if task_name == None:
             task_name = input('Task name: ')
@@ -40,9 +40,7 @@ class TaskManager:
         file.write(task_file_entry + '\n')
         file.close();
 
-    def list():
-        os.chdir(os.path.expanduser('~'))
-        file = open(FILENAME, 'r')
-        tasks = file.readlines()
+    def list(self):
+        tasks = _task_repository.get_all()
         for task in tasks:
             print(task)
