@@ -32,7 +32,7 @@ Test with the `unittest` modules. Eg, `python3 task_class_test.py` will run the 
 - [ ] List existing tasks by some sorting
 - [x] Set priority for tasks
 - [x] Set due dates for tasks
-- [ ] Set details for tasks
+- [x] Set details for tasks
 - [ ] Display tasks by due date
 - [ ] Display tasks by category
 - [ ] Display tasks by priority

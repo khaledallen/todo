@@ -3,13 +3,21 @@ from datetime import timedelta
 from priority import Priority
 
 class Task:
-    def __init__(self, name = None, due_date = None, priority = None, details = None, list = None):
+    def __init__(self,
+            id = None,
+            name = None,
+            due_date = None,
+            priority = None,
+            details = None,
+            list = None,
+            complete = False):
+        self.id = None  #this is always set by the database
         self.name = name
         self.due_date = self.process_due_date(due_date)
         self.priority = self.process_priority(priority)
         self.details = details
         self.list = list
-        self.complete = False
+        self.complete = complete
 
     def process_due_date(self, due_date_string = None):
         if due_date_string == 'today':
