@@ -23,6 +23,7 @@ class Task:
         return '{} Due: {}, {}, Details: {}, List: {}, Complete: {}'.format(self.name, self.due_date, self.priority, self.details, self.list, self.complete)
 
     def print_abbrv(self):
+        #completed = u'\u2713' if self.complete else ' '
         completed = u'\u2713' if self.complete else ' '
         if self.priority is Priority.HIGH:
             priority_sym = '!'
