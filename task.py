@@ -23,17 +23,16 @@ class Task:
         return '{} Due: {}, {}, Details: {}, List: {}, Complete: {}'.format(self.name, self.due_date, self.priority, self.details, self.list, self.complete)
 
     def print_abbrv(self):
-        #completed = u'\u2713' if self.complete else ' '
-        completed = u'\u2713' if self.complete else ' '
+        completed = u'\033[1m\u2713\033[0m' if self.complete else ' '
         if self.priority is Priority.HIGH:
-            priority_sym = '!'
+            priority_sym = u'\u21A5'
         elif self.priority is Priority.MEDIUM:
-            priority_sym = '-'
+            priority_sym = u'\u21A6'
         elif self.priority is Priority.LOW:
-            priority_sym = '_'
+            priority_sym = u'\u21A7'
         elif self.priority is Priority.NONE:
             priority_sym = ' '
-        return '({0:04}) {1:1} [{2:1}] - {3:30}{4:>9}'.format(self.id, priority_sym, completed, self.name, self.due_date.strftime('%D'), align='right')
+        return '({0:04}) \033[1m{1:1}\033[0m [{2:1}] - {3:30}{4:>9}'.format(self.id, priority_sym, completed, self.name, self.due_date.strftime('%D'), align='right')
 
 
     def process_due_date(self, due_date_string = None):
