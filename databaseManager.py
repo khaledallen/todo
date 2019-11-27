@@ -19,6 +19,7 @@ class DBManager:
                       priority INTEGER,
                       details TEXT,
                       list TEXT,
+                      action TEXT,
                       complete INTEGER
                      )''')
         conn.commit()  
@@ -37,20 +38,32 @@ class DBManager:
                 priority = task[3],
                 details = task[4],
                 list = task[5],
-                complete = task[6] 
+                action = task[6],
+                complete = task[7] 
                 ))
         conn.close()
         return task_list
 
     def add_task(self, task):
+        if task.due_date != None:
+            due_date = task.due_date.strftime('%Y-%m-%d')
+        else:
+            due_date = None
+
+        if task.priority != None:
+            priority = task.priority.value
+        else:
+            priority = None
+
         conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
         c = conn.cursor()
-        c.execute('INSERT INTO tasks (name, due_date, priority, details, list, complete) VALUES (?, ?, ?, ?, ?, ?)',
+        c.execute('INSERT INTO tasks (name, due_date, priority, details, list, action, complete) VALUES (?, ?, ?, ?, ?, ?, ?)',
                     (task.name,
-                    task.due_date.strftime('%Y-%m-%d'),
-                    task.priority.value,
+                    due_date,
+                    priority,
                     task.details,
                     task.list,
+                    task.action,
                     int(task.complete)))
         conn.commit()
         conn.close()
@@ -59,7 +72,15 @@ class DBManager:
         conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
         c = conn.cursor()
         t = c.execute('SELECT * FROM tasks WHERE id=?', str(task_id)).fetchone()
-        task = Task(t[0], t[1], t[2], t[3], t[4], t[5], t[6])
+        task = Task(
+                id = t[0],
+                name = t[1],
+                due_date = t[2],
+                priority = t[3],
+                details =  t[4],
+                list = t[5],
+                action = t[6],
+                complete = t[7])
         conn.close()
         return task
 
@@ -73,6 +94,7 @@ class DBManager:
                                 priority=?,
                                 details=?,
                                 list=?,
+                                action=?,
                                 complete=?
                             WHERE id=?''',
                             (task.name, 
@@ -80,6 +102,7 @@ class DBManager:
                             task.priority.value,
                             task.details,
                             task.list,
+                            task.action,
                             int(task.complete),
                             str(task.id))) 
         task = self.get_task(task.id)

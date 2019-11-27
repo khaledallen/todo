@@ -9,9 +9,10 @@ from taskmanager import TaskManager
 DBNAME = 'todo.db'
 
 def main():
+    os.chdir(os.path.expanduser('~/Coding/todo-app'))
     task_manager = TaskManager(DBNAME)
     parser = argparse.ArgumentParser(description='Manage your todo list.')
-    parser.add_argument('action', action='store', choices=['add', 'list', 'complete', 'do'])
+    parser.add_argument('action', action='store', choices=['add', 'list', 'complete', 'do', 'detail'])
     parser.add_argument('-t', action='store')
     parser.add_argument('-d', action='store')
     parser.add_argument('-p', action='store')
@@ -23,10 +24,12 @@ def main():
         task_manager.add(args.t, args.d, args.p, args.e)
     elif args.action == 'list':
         task_manager.list()
-    elif args.action == 'do':
-        task_manager.do(args.t)
+    elif args.action == 'detail':
+        task_manager.detail(int(args.t))
     elif args.action == 'complete':
-        task_manager.complete(args.t)
+        task_manager.complete(int(args.t))
+    elif args.action == 'do':
+        task_manager.do(int(args.t))
 
 if __name__ == "__main__":
     main()

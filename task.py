@@ -1,6 +1,7 @@
 from datetime import date
 from datetime import timedelta
 from priority import Priority
+from utils import Text
 
 class Task:
     def __init__(self,
@@ -10,7 +11,8 @@ class Task:
             priority = None,
             details = None,
             list = None,
-            complete = False):
+            complete = False,
+            action = None):
         self.id = id  #this is always set by the database
         self.name = name
         self.due_date = self.process_due_date(due_date)
@@ -18,9 +20,18 @@ class Task:
         self.details = details
         self.list = list
         self.complete = complete
+        self.action = action
 
     def __str__(self):
         return '{} Due: {}, {}, Details: {}, List: {}, Complete: {}'.format(self.name, self.due_date, self.priority, self.details, self.list, self.complete)
+
+    def print_detail(self):
+        return (Text.BOLD + 'Name:' + Text.END + ' {name:30}' + Text.BOLD + 'Complete:' + Text.END +' {complete}\n'+
+                Text.BOLD + 'Due Date:' + Text.END + ' {due_date}\n'+
+                Text.BOLD + 'Priority:' + Text.END + ' {priority}\n'+
+                Text.BOLD + 'List:' + Text.END + ' {list}\n'+
+                Text.BOLD + 'Action:' + Text.END + ' {action}\n'+
+                Text.BOLD + 'Details:' + Text.END + ' {details}\n').format( name=self.name, complete=bool(self.complete), due_date=self.due_date, priority=self.priority.name, list=self.list, action=self.action, details=self.details)
 
     def print_abbrv(self):
         completed = u'\033[1m\u2713\033[0m' if self.complete else ' '
@@ -32,7 +43,12 @@ class Task:
             priority_sym = u'\u21A7'
         elif self.priority is Priority.NONE:
             priority_sym = ' '
-        return '({0:04}) \033[1m{1:1}\033[0m [{2:1}] - {3:30}{4:>9}'.format(self.id, priority_sym, completed, self.name, self.due_date.strftime('%D'), align='right')
+        if self.due_date != None:
+            due_date = self.due_date.strftime('%D')
+        else:
+            due_date = ''
+
+        return '({0:04}) \033[1m{1:1}\033[0m [{2:1}] - {3:30}{4:>9}'.format(self.id, priority_sym, completed, self.name, due_date, align='right')
 
 
     def process_due_date(self, due_date_string = None):
