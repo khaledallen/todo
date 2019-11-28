@@ -29,13 +29,13 @@ Test with the `unittest` modules. Eg, `python3 task_class_test.py` will run the 
 - [x] Implement category/lists
 - [x] Load the tasklist into memory in a meaningful way
 - [x] List existing tasks
-- [ ] List existing tasks by some sorting
+- [x] List existing tasks by some sorting
 - [x] Set priority for tasks
 - [x] Set due dates for tasks
 - [x] Set details for tasks
-- [ ] Display tasks by due date
+- [x] Display tasks by due date
 - [x] Display tasks by category
-- [ ] Display tasks by priority
+- [x] Display tasks by priority
 
 # Implementation Ideas
 

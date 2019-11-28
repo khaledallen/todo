@@ -34,7 +34,7 @@ class TaskManager:
             tasks = self.dbm.get_all()
 
         if priority_sort and due_date_sort:
-            tasks = sorted(tasks, key=attrgetter('due_date', 'priority'))
+            tasks.sort(key=lambda t: (t.due_date if t.due_date else date.max, t.priority.value))
         elif priority_sort:
             tasks.sort(key=lambda t: t.priority.value)
         elif due_date_sort:
@@ -46,8 +46,8 @@ class TaskManager:
         for task in tasks:
             print(task.print_abbrv())
         print('_' * 60)    
-        print('- "todo do [id]" to print details for a task')
-        print('- "todo comp [id]" to mark the task complete')
+        print('- "todo details [id]" to print details for a task')
+        print('- "todo complete [id]" to mark the task complete')
 
     def details(self, task_id):
         task = self.dbm.get_task(int(task_id))

@@ -95,7 +95,7 @@ class DBManager:
     def get_task(self, task_id):
         conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
         c = conn.cursor()
-        t = c.execute('SELECT * FROM tasks WHERE id=?', str(task_id)).fetchone()
+        t = c.execute('SELECT * FROM tasks WHERE id=?', (str(task_id),)).fetchone()
         task = Task(
                 id = t[0],
                 name = t[1],
