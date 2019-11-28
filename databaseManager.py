@@ -44,7 +44,26 @@ class DBManager:
         conn.close()
         return task_list
 
-    def add_task(self, task):
+    def get_by_list(self, list):
+        conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
+        c = conn.cursor()
+        tasks = c.execute('SELECT * FROM tasks WHERE list=?', (list,))
+        task_list = []
+        for task in tasks:
+            task_list.append(Task(
+                id = task[0],
+                name = task[1],
+                due_date = task[2],
+                priority = task[3],
+                details = task[4],
+                list = task[5],
+                action = task[6],
+                complete = task[7] 
+                ))
+        conn.close()
+        return task_list
+
+    def clean_task_properties(self, task):
         if task.due_date != None:
             due_date = task.due_date.strftime('%Y-%m-%d')
         else:
@@ -54,6 +73,11 @@ class DBManager:
             priority = task.priority.value
         else:
             priority = None
+
+        return (due_date, priority)
+
+    def add_task(self, task):
+        due_date, priority = self.clean_task_properties(task)
 
         conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
         c = conn.cursor()
@@ -85,7 +109,7 @@ class DBManager:
         return task
 
     def update_task(self, task):
-        print(task.id)
+        due_date, priority = self.clean_task_properties(task)
         conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
         c = conn.cursor()
         t = c.execute('''UPDATE tasks 
@@ -98,8 +122,8 @@ class DBManager:
                                 complete=?
                             WHERE id=?''',
                             (task.name, 
-                            task.due_date.strftime('%Y-%m-%d'),
-                            task.priority.value,
+                            due_date,
+                            priority,
                             task.details,
                             task.list,
                             task.action,

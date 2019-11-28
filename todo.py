@@ -8,28 +8,75 @@ from taskmanager import TaskManager
 
 DBNAME = 'todo.db'
 
+def parse_commands (parser, namespace):
+  namespaces = []
+  commands = namespace.commands
+  while commands:
+    n = parser.parse_args(commands)
+    commands = n.commands
+    namespaces.append(n)
+
+  return namespaces
+
 def main():
     os.chdir(os.path.expanduser('~/Coding/todo-app'))
     task_manager = TaskManager(DBNAME)
-    parser = argparse.ArgumentParser(description='Manage your todo list.')
-    parser.add_argument('action', action='store', choices=['add', 'list', 'complete', 'do', 'detail'])
-    parser.add_argument('-t', action='store')
-    parser.add_argument('-d', action='store')
-    parser.add_argument('-p', action='store')
-    parser.add_argument('-e', action='store')
-    parser.add_argument('-l', action='store')
 
-    args = parser.parse_args();
-    if args.action == 'add':
-        task_manager.add(args.t, args.d, args.p, args.e)
-    elif args.action == 'list':
-        task_manager.list()
-    elif args.action == 'detail':
-        task_manager.detail(int(args.t))
-    elif args.action == 'complete':
-        task_manager.complete(int(args.t))
-    elif args.action == 'do':
-        task_manager.do(int(args.t))
+    ## This function takes the 'extra' attribute from global namespace and re-parses it to create separate namespaces for all other chained commands.
+
+    argparser=argparse.ArgumentParser()
+
+    # This may break updates.
+    argparser._positionals.title = 'Commands'
+
+    subparsers = argparser.add_subparsers(dest='subparser_name')
+
+    parser_add = subparsers.add_parser('add', help = 'add a task')
+    parser_add.add_argument('task', nargs='?', help="The name of the task you want to add. If you omit this, todo will explicitly ask for a name.", default=None)
+    parser_add.add_argument('-q', '--quick', action='store_true', help='Suppress asking for task details. Todo will prompt for a task name if one wasn\'t provided.')
+    parser_add.add_argument('-d', '--due-date', metavar='<date>', action='store', help='Set due date. You can also say "today" or "tomorrow"')
+    parser_add.add_argument('-p', '--priority', metavar='<[H]igh, [M]edium, [L]ow>', action='store', help='Set priority', choices=['H', 'h', 'M', 'm', 'L', 'l', 'High', 'Medium', 'Low', 'high', 'medium', 'low', 'HIGH', 'MEDIUM', 'LOW'])
+    parser_add.add_argument('-D', '--details', metavar='<details text>', action='store', help='Set details')
+    parser_add.add_argument('-l', '--list', metavar='<list name>', action='store', help='Set which list the task belongs to')
+    parser_add.add_argument('-a', '--action', metavar='<shell command>', action='store', help='Set a terminal command to execute when you DO the task')
+
+    parser_list = subparsers.add_parser('list', help = "List tasks")
+    parser_list.add_argument('list', nargs='?', default=None)
+    parser_list.add_argument('-p', '--priority', action='store_true', help='Sort by priority')
+    parser_list.add_argument('-d', '--due_date', action='store_true', help='Sort by due date. This takes priority over sorting by priority, so if you select both, tasks will be sorted by date first, then priority')
+
+    parser_complete = subparsers.add_parser('complete', help = "Mark a task completed")
+    parser_complete.add_argument('id', default=None, help='Id of the task to mark completed')
+    parser_complete.add_argument('-u', '--uncomplete', action='store_true', help='Mark a task uncompleted')
+    
+    parser_details= subparsers.add_parser('details', help = "View details for a task")
+    parser_details.add_argument('id', default=None, help = 'Id of the task whose details you want to see')
+
+    parser_do= subparsers.add_parser('do', help = "Perform the action for a task")
+    parser_do.add_argument('id', default=None, help = 'Id of the task whose action to execute')
+    ## Add nargs="*" for zero or more other commands
+    argparser.add_argument('commands', metavar='<command>', nargs = "*", help = argparse.SUPPRESS) 
+
+    args = argparser.parse_args()
+    commands = parse_commands(argparser, args)
+
+    if args.subparser_name == 'add':
+        task_manager.add(
+                task_name = args.task,
+                task_due_date = args.due_date,
+                task_priority = args.priority,
+                task_details = args.details,
+                task_list = args.list,
+                task_action = args.action,
+                quick_input = args.quick)
+    elif args.subparser_name == 'list':
+        task_manager.list(args.list, args.priority, args.due_date)
+    elif args.subparser_name == 'complete':
+        task_manager.complete(args.id, args.uncomplete)
+    elif args.subparser_name == 'details':
+        task_manager.details(args.id)
+    elif args.subparser_name == 'do':
+        task_manager.do(args.id)
 
 if __name__ == "__main__":
     main()

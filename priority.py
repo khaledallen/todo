@@ -6,3 +6,4 @@ class Priority(Enum):
     MEDIUM = 1
     LOW = 2
     NONE = 3
+

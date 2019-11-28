@@ -14,10 +14,10 @@ Test with the `unittest` modules. Eg, `python3 task_class_test.py` will run the 
 - [x] User can add a task
 - [x] User can add a task with due date, priority, details, and title
 - [ ] User can search for task by keywords
-- [ ] User can quick add a task with default values from the command line directly
-- [ ] User can set an action that `todo do` will execute in the shell    
+- [x] User can quick add a task with default values from the command line directly
+- [x] User can set an action that `todo do` will execute in the shell    
 - [ ] Todolist can check if a task is similar to an existing one and let the user know it's already on the list or allow bumping it     
-- [ ] Create and maintain arbitrary lists in various categories
+- [x] Create and maintain arbitrary lists in various categories
 - [ ] User can display tasks by various attributes (priority, due date, category)
 
 
@@ -26,7 +26,7 @@ Test with the `unittest` modules. Eg, `python3 task_class_test.py` will run the 
 - [x] Add a task with description, date, due date, priority
     - [x] Create a prompt
     - [x] Create a CLI one line command for this
-- [ ] Implement category/lists
+- [x] Implement category/lists
 - [x] Load the tasklist into memory in a meaningful way
 - [x] List existing tasks
 - [ ] List existing tasks by some sorting
@@ -34,7 +34,7 @@ Test with the `unittest` modules. Eg, `python3 task_class_test.py` will run the 
 - [x] Set due dates for tasks
 - [x] Set details for tasks
 - [ ] Display tasks by due date
-- [ ] Display tasks by category
+- [x] Display tasks by category
 - [ ] Display tasks by priority
 
 # Implementation Ideas
