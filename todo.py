@@ -54,6 +54,9 @@ def main():
 
     parser_do= subparsers.add_parser('do', help = "Perform the action for a task")
     parser_do.add_argument('id', default=None, help = 'Id of the task whose action to execute')
+
+    parser_delete = subparsers.add_parser('delete', help="Delete a task")
+    parser_delete.add_argument('id', default=None, help='Id of the task to delete')
     ## Add nargs="*" for zero or more other commands
     argparser.add_argument('commands', metavar='<command>', nargs = "*", help = argparse.SUPPRESS) 
 
@@ -77,6 +80,8 @@ def main():
         task_manager.details(args.id)
     elif args.subparser_name == 'do':
         task_manager.do(args.id)
+    elif args.subparser_name == 'delete':
+        task_manager.delete(args.id)
 
 if __name__ == "__main__":
     main()

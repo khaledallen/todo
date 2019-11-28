@@ -58,10 +58,28 @@ class TaskManager:
         os.system(task.action)
 
     def complete(self, task_id, uncomplete = False):
-        task = self.dbm.get_task(int(task_id))
-        if not uncomplete:
-            task.complete = True
+        try:
+            task = self.dbm.get_task(int(task_id))
+        except TypeError:
+            print('Error: Can\'t find task with ID {}. Make sure you entered the correct ID.'.format(task_id))
         else:
-            task.complete = False
-        self.dbm.update_task(task)
+            if not uncomplete:
+                task.complete = True
+            else:
+                task.complete = False
+            task = self.dbm.update_task(task)
+            if(task):
+                print('Task with ID {} successfully completed.'.format(task_id))
 
+    def delete(self, task_id):
+        try:
+            task = self.dbm.get_task(int(task_id))
+        except TypeError:
+            print('Error: Can\'t find task with ID {}. Did you mistype the ID or delete the task already?'.format(task_id))
+        else:
+            task = self.dbm.delete_task(task)
+            if(task):
+                print('Task with ID {} successfully deleted.'.format(task_id))
+
+    def clear(self):
+        print("Not impletmented yet")

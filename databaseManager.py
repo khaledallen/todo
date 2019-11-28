@@ -135,4 +135,11 @@ class DBManager:
         return task
 
     def delete_task(self, task):
-        print('not implemented')
+        conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
+        c = conn.cursor()
+        t = c.execute('''DELETE FROM tasks 
+                            WHERE id=?''',
+                            (str(task.id),)) 
+        conn.commit()
+        conn.close()
+        return task
