@@ -143,3 +143,9 @@ class DBManager:
         conn.commit()
         conn.close()
         return task
+
+    def delete_completed(self):
+        conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
+        conn.execute('''DELETE FROM tasks WHERE complete=1''')
+        conn.commit()
+        conn.close()

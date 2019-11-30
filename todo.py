@@ -57,6 +57,13 @@ def main():
 
     parser_delete = subparsers.add_parser('delete', help="Delete a task")
     parser_delete.add_argument('id', default=None, help='Id of the task to delete')
+    parser_delete.add_argument('-f', '--force', action='store_true', help='Don\'t prompt for confirmation.')
+
+    parser_clear = subparsers.add_parser('clear', help="Delete all completed tasks")
+    parser_clear.add_argument('-f', '--force', action='store_true', help='Don\'t prompt for confirmation.')
+
+    parser_search = subparsers.add_parser('search', help='Search your tasks and generate a list of matches')
+    parser_search.add_argument('query', metavar='<search term>', action='store', help='The text to match. Words are split and search will return anything that matches all words provided, not necessarily in the order given')
     ## Add nargs="*" for zero or more other commands
     argparser.add_argument('commands', metavar='<command>', nargs = "*", help = argparse.SUPPRESS) 
 
@@ -81,7 +88,11 @@ def main():
     elif args.subparser_name == 'do':
         task_manager.do(args.id)
     elif args.subparser_name == 'delete':
-        task_manager.delete(args.id)
+        task_manager.delete(args.id, args.force)
+    elif args.subparser_name == 'clear':
+        task_manager.clear(args.force)
+    elif args.subparser_name == 'search':
+        task_manager.search(args.query)
 
 if __name__ == "__main__":
     main()

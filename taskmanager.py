@@ -33,6 +33,7 @@ class TaskManager:
         else:
             tasks = self.dbm.get_all()
 
+        tasks.sort(key=lambda t: t.complete)
         if priority_sort and due_date_sort:
             tasks.sort(key=lambda t: (t.due_date if t.due_date else date.max, t.priority.value))
         elif priority_sort:
@@ -71,15 +72,34 @@ class TaskManager:
             if(task):
                 print('Task with ID {} successfully completed.'.format(task_id))
 
-    def delete(self, task_id):
+    def delete(self, task_id, force = False):
         try:
             task = self.dbm.get_task(int(task_id))
         except TypeError:
             print('Error: Can\'t find task with ID {}. Did you mistype the ID or delete the task already?'.format(task_id))
         else:
-            task = self.dbm.delete_task(task)
+            if not force:
+                confirm = input('Are you sure you want to delete task {}? (y/n)'.format(task.id))
+            if force or confirm.lower() is 'y':
+                task = self.dbm.delete_task(task)
             if(task):
                 print('Task with ID {} successfully deleted.'.format(task_id))
 
-    def clear(self):
-        print("Not impletmented yet")
+    def clear(self, force):
+        if not force:
+            confirm = input('Are you sure you want to delete your completed tasks? (y/n)')
+        if force or confirm.lower() == 'y':
+            self.dbm.delete_completed
+
+'''
+    def search(self, query):
+        tasks = self.dbm.get_all()
+        results = []
+        query_arr = query.split(' ')
+        for query_snip in query_arr:
+            
+        for task in tasks:
+            if all(
+                    f
+                re.search())
+                '''
