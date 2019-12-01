@@ -27,8 +27,15 @@ class TaskManager:
 
         self.dbm.add_task(task_obj)
 
-    def list(self, list=None, priority_sort=False, due_date_sort=False):
-        if list != None:
+    def list(self, list=None, priority_sort=False, due_date_sort=False, task_list=None):
+        if task_list != None:
+            tasks = task_list
+        elif list == 'list':
+            lists = self.dbm.get_all_lists()
+            for list in lists:
+                print(list.name)
+                return
+        elif list != None:
             tasks = self.dbm.get_by_list(list)
         else:
             tasks = self.dbm.get_all()
@@ -71,6 +78,7 @@ class TaskManager:
             task = self.dbm.update_task(task)
             if(task):
                 print('Task with ID {} successfully completed.'.format(task_id))
+            self.list()
 
     def delete(self, task_id, force = False):
         try:
@@ -82,24 +90,36 @@ class TaskManager:
                 confirm = input('Are you sure you want to delete task {}? (y/n)'.format(task.id))
             if force or confirm.lower() is 'y':
                 task = self.dbm.delete_task(task)
-            if(task):
-                print('Task with ID {} successfully deleted.'.format(task_id))
+                if(task):
+                    print('Task with ID {} successfully deleted.'.format(task_id))
+                else:
+                    print('There was an error.')
+            else:
+                print('Cancelled')
+            self.list()
 
     def clear(self, force):
         if not force:
             confirm = input('Are you sure you want to delete your completed tasks? (y/n)')
         if force or confirm.lower() == 'y':
-            self.dbm.delete_completed
+            self.dbm.delete_completed()
+        else:
+            print('Cancelled')
+        self.list()
 
-'''
     def search(self, query):
         tasks = self.dbm.get_all()
+
         results = []
         query_arr = query.split(' ')
-        for query_snip in query_arr:
-            
+
         for task in tasks:
-            if all(
-                    f
-                re.search())
-                '''
+            include = True
+            for query_snip in query_arr:
+                if task.name.find(query_snip) == -1:
+                    include = False
+            if include:
+                results.append(task)
+                    
+        return self.list(task_list=results)
+            

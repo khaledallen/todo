@@ -11,7 +11,7 @@ Test with the `unittest` modules. Eg, `python3 task_class_test.py` will run the 
 
 # Features
 
-- [ ] User can search for task by keywords
+- [x] User can search for task by keywords
 - [ ] Todolist can check if a task is similar to an existing one and let the user know it's already on the list or allow bumping it     
 - [ ] User can display tasks by various attributes (priority, due date, category)
 - [ ] User can clear completed tasks to an archive
@@ -24,8 +24,7 @@ Test with the `unittest` modules. Eg, `python3 task_class_test.py` will run the 
 # Tasks
 - [ ] Display tasks by due date
 - [ ] Display tasks by priority
-- [ ] Search by...name
-- [ ] Create archive in the DB for clearing tasks
+- [x] Search by...name
 - [ ] Create config file for defaults
     - [ ] Show/hide completed tasks by default
     - [ ] Set default sorting
