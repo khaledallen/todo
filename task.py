@@ -35,6 +35,7 @@ class Task:
 
     def print_abbrv(self):
         completed = u'\033[1m\u2713\033[0m' if self.complete else ' '
+        action = u'\u25B6' if self.action else ' '
         if self.priority is Priority.HIGH:
             priority_sym = u'\u21A5'
         elif self.priority is Priority.MEDIUM:
@@ -48,7 +49,7 @@ class Task:
         else:
             due_date = ''
 
-        return '({0:04}) \033[1m{1:1}\033[0m [{2:1}] - {3:30}{4:>9}'.format(self.id, priority_sym, completed, self.name, due_date, align='right')
+        return '({0:04}) \033[1m{1:1}\033[0m {2:2}[{3:1}] {4:50}{5:>9}'.format(self.id, priority_sym, action, completed, self.name, due_date, align='right')
 
 
     def process_due_date(self, due_date_string = None):

@@ -41,7 +41,7 @@ def main():
     parser_add.add_argument('-a', '--action', metavar='<shell command>', action='store', help='Set a terminal command to execute when you DO the task')
 
     parser_list = subparsers.add_parser('list', help = "List tasks")
-    parser_list.add_argument('list', nargs='?', default=None help='Which list you want to show. Passing "list" here will list all lists (eg, todo list list)')
+    parser_list.add_argument('list', nargs='?', default=None, help='Which list you want to show. Passing "list" here will list all lists (eg, todo list list)')
     parser_list.add_argument('-p', '--priority', action='store_true', help='Sort by priority')
     parser_list.add_argument('-d', '--due_date', action='store_true', help='Sort by due date. This takes priority over sorting by priority, so if you select both, tasks will be sorted by date first, then priority')
 

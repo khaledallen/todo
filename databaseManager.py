@@ -22,6 +22,7 @@ class DBManager:
                       action TEXT,
                       complete INTEGER
                      )''')
+        c.execute('''CREATE TABLE IF NOT EXISTS lists (id INTEGER PRIMARY KEY, name TEXT)''')
         conn.commit()  
         conn.close()
 
@@ -43,6 +44,15 @@ class DBManager:
                 ))
         conn.close()
         return task_list
+
+    def get_all_lists(self):
+        conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
+        lists = conn.execute('SELECT * FROM lists')
+        list_list = []
+        for list in lists:
+            list_list.append(list)
+        conn.close()
+        return list_list
 
     def get_by_list(self, list):
         conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
@@ -92,6 +102,12 @@ class DBManager:
         conn.commit()
         conn.close()
 
+    def add_list(self, list_name):
+        conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
+        conn.execute('INSERT INTO lists (name) VALUES (?)', (list_name,))
+        conn.commit()
+        conn.close()
+
     def get_task(self, task_id):
         conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
         c = conn.cursor()
@@ -107,6 +123,20 @@ class DBManager:
                 complete = t[7])
         conn.close()
         return task
+
+    def get_list(self, list_id):
+        conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
+        c = conn.cursor()
+        list = c.execute('SELECT * FROM lists WHERE id=?', (str(list_id),)).fetchone()
+        conn.close()
+        return list
+
+    def get_list_by_name(self, list_name):
+        conn = sqlite3.connect(self.database_name, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES) 
+        c = conn.cursor()
+        list = c.execute('SELECT * FROM lists WHERE name=?', (str(list_name),)).fetchone()
+        conn.close()
+        return list
 
     def update_task(self, task):
         due_date, priority = self.clean_task_properties(task)

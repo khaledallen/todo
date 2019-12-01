@@ -26,6 +26,9 @@ class TaskManager:
         task_obj = Task(name = task_name, due_date = task_due_date, priority = task_priority, details = task_details, list = task_list, action = task_action)
 
         self.dbm.add_task(task_obj)
+        existinglist = self.dbm.get_list_by_name(task_obj.list)
+        if existinglist == None:
+            self.dbm.add_list(task_obj.list)
 
     def list(self, list=None, priority_sort=False, due_date_sort=False, task_list=None):
         if task_list != None:
@@ -33,8 +36,8 @@ class TaskManager:
         elif list == 'list':
             lists = self.dbm.get_all_lists()
             for list in lists:
-                print(list.name)
-                return
+                print(list[1])
+            return
         elif list != None:
             tasks = self.dbm.get_by_list(list)
         else:
@@ -47,13 +50,12 @@ class TaskManager:
             tasks.sort(key=lambda t: t.priority.value)
         elif due_date_sort:
             tasks.sort(key=lambda t: t.due_date if t.due_date else date.max)
-            #tasks = sorted(tasks, key=attrgetter('due_date'))
 
-        print('{:<6} {:<8}{:<30}{:>9}'.format('Id', 'Status', 'Name', 'Due Date'))
-        print('-' * 60)
+        print('{:<6} {:<8}{:<50}{:>9}'.format('Id', 'Status', 'Name', 'Due Date'))
+        print('-' * 80)
         for task in tasks:
             print(task.print_abbrv())
-        print('_' * 60)    
+        print('_' * 80)    
         print('- "todo details [id]" to print details for a task')
         print('- "todo complete [id]" to mark the task complete')
 
