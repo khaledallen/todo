@@ -22,9 +22,6 @@ Test with the `unittest` modules. Eg, `python3 task_class_test.py` will run the 
 - [x] Create and maintain arbitrary lists in various categories
 
 # Tasks
-- [ ] Update file system to handle Windows
-- [ ] Add a config file for setting root directory, OS and tracking install
-- [ ] Create an installation procedure that checks if the config file exists
 - [ ] Display tasks by due date
 - [ ] Display tasks by priority
 - [x] Search by...name
