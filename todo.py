@@ -18,7 +18,9 @@ def parse_commands (parser, namespace):
   return namespaces
 
 def main():
-    f = open('config.json')
+    local_path = os.path.dirname(os.path.realpath(__file__))
+    config_path = os.path.join(local_path, 'config.json')
+    f = open(config_path)
     config = json.load(f)
 
     os.chdir(os.path.expanduser(config['tasksDirectory']))
