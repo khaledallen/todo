@@ -1,12 +1,11 @@
 import argparse
-from datetime import date, timedelta
 import os.path
+import json
+from datetime import date, timedelta
 from enum import Enum
 from task import Task
 from priority import Priority
 from taskmanager import TaskManager
-
-DBNAME = 'todo.db'
 
 def parse_commands (parser, namespace):
   namespaces = []
@@ -19,8 +18,11 @@ def parse_commands (parser, namespace):
   return namespaces
 
 def main():
-    os.chdir(os.path.expanduser('~/Coding/todo-app'))
-    task_manager = TaskManager(DBNAME)
+    f = open('config.json')
+    config = json.load(f)
+
+    os.chdir(os.path.expanduser(config['tasksDirectory']))
+    task_manager = TaskManager(config['dbName'])
 
     ## This function takes the 'extra' attribute from global namespace and re-parses it to create separate namespaces for all other chained commands.
 
