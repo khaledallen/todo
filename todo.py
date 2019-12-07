@@ -20,6 +20,11 @@ def parse_commands (parser, namespace):
 def main():
     local_path = os.path.dirname(os.path.realpath(__file__))
     config_path = os.path.join(local_path, 'config.json')
+    if not os.path.exists(config_path):
+        print('Please create a config.json file')
+        #This is where the install function will go
+        return
+
     f = open(config_path)
     config = json.load(f)
 
