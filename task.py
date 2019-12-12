@@ -2,7 +2,6 @@ from datetime import date
 from datetime import timedelta
 from priority import Priority
 from termcolor import colored, cprint
-from utils import Text
 
 class Task:
     def __init__(self,
