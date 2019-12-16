@@ -1,7 +1,7 @@
 from datetime import date
 from datetime import timedelta
 from priority import Priority
-from utils import Text
+from termcolor import colored, cprint
 
 class Task:
     def __init__(self,
@@ -34,22 +34,25 @@ class Task:
                 Text.BOLD + 'Details:' + Text.END + ' {details}\n').format( name=self.name, complete=bool(self.complete), due_date=self.due_date, priority=self.priority.name, list=self.list, action=self.action, details=self.details)
 
     def print_abbrv(self):
-        completed = u'\033[1m\u2713\033[0m' if self.complete else ' '
+        completed = colored('\u2713', attrs=['bold']) if self.complete else ' '
         action = u'\u25B6' if self.action else ' '
         if self.priority is Priority.HIGH:
-            priority_sym = u'\u21A5'
+            priority_sym = colored('H', attrs=['bold'])
         elif self.priority is Priority.MEDIUM:
-            priority_sym = u'\u21A6'
+            priority_sym = colored('M', attrs=['bold'])
         elif self.priority is Priority.LOW:
-            priority_sym = u'\u21A7'
+            priority_sym = colored('L', attrs=['bold'])
         elif self.priority is Priority.NONE:
             priority_sym = ' '
         if self.due_date != None:
-            due_date = self.due_date.strftime('%D')
+            if self.due_date < date.today():
+                due_date = colored(self.due_date.strftime('%D'), 'red')
+            else:
+                due_date = self.due_date.strftime('%D')
         else:
             due_date = ''
 
-        return '({0:04}) \033[1m{1:1}\033[0m {2:2}[{3:1}] {4:50}{5:>9}'.format(self.id, priority_sym, action, completed, self.name, due_date, align='right')
+        return "{0:04} {1:1} {2:2}[{3:1}] {4:50}{5:>9}".format(self.id, priority_sym, action, completed, self.name, due_date, align='right')
 
 
     def process_due_date(self, due_date_string = None):
