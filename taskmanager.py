@@ -110,7 +110,7 @@ class TaskManager:
             print('Error: Can\'t find task with ID {}. Make sure you entered the correct ID.'.format(task_id))
         else:
             new_task_name = input('New task name: ')
-            new_task_due_date = input('New due date (enter ! to cleare): ')
+            new_task_due_date = input('New due date (enter ! to clear): ')
             new_task_priority = input('New priority ([H]i, [M]edium, [L]ow, ! to clear): ')
             new_task_details = input('New details (enter ! to clear: ')
             new_task_action = input('New shell action to do the task (enter ! to clear): ')
