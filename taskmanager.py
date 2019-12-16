@@ -123,17 +123,14 @@ class TaskManager:
             task.action = self.set_new_task_property(task.action, new_task_action)
             task.list = self.set_new_task_property(task.list, new_task_list)
 
-            print(task.print_detail())
-
             self.dbm.update_task(task)
 
-            existinglist = self.dbm.get_list_by_name(task.list)
-            if existinglist == None:
-                self.dbm.add_list(task.list)
+            if not (task.list == None or task.list == ''):
+                existinglist = self.dbm.get_list_by_name(task.list)
+                if existinglist == None:
+                    self.dbm.add_list(task.list)
 
     def set_new_task_property(self, old, new):
-        print('old', old)
-        print('new', new)
         if new == '!':
             return None
         elif new == None or new == '' or new == old:
