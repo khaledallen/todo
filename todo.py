@@ -65,7 +65,7 @@ def main():
     parser_do.add_argument('id', default=None, help = 'Id of the task whose action to execute')
 
     parser_delete = subparsers.add_parser('delete', help="Delete a task")
-    parser_delete.add_argument('id', default=None, help='Id of the task to delete')
+    parser_delete.add_argument('id', nargs='+', default=None, help='Id of the task to delete')
     parser_delete.add_argument('-f', '--force', action='store_true', help='Don\'t prompt for confirmation.')
 
     parser_clear = subparsers.add_parser('clear', help="Delete all completed tasks")

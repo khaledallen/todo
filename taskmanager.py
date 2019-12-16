@@ -82,20 +82,23 @@ class TaskManager:
                 print('Task with ID {} successfully completed.'.format(task_id))
             self.list()
 
-    def delete(self, task_id, force = False):
+    def delete(self, task_id_list, force = False):
         try:
-            task = self.dbm.get_task(int(task_id))
+            task_list = []
+            for id in task_id_list:
+                task_list.append(self.dbm.get_task(int(id)))
         except TypeError:
             print('Error: Can\'t find task with ID {}. Did you mistype the ID or delete the task already?'.format(task_id))
         else:
             if not force:
-                confirm = input('Are you sure you want to delete task {}? (y/n)'.format(task.id))
-            if force or confirm.lower() is 'y':
-                task = self.dbm.delete_task(task)
-                if(task):
-                    print('Task with ID {} successfully deleted.'.format(task_id))
-                else:
-                    print('There was an error.')
+                confirm = input('Are you sure you want to delete task {}? (y/n)'.format(task_id_list))
+            if force or confirm.lower()[0] is 'y':
+                for task in task_list:
+                    task = self.dbm.delete_task(task)
+                    if(task):
+                        print('Task with ID {} successfully deleted.'.format(task.id))
+                    else:
+                        print('There was an error.')
             else:
                 print('Cancelled')
             self.list()
