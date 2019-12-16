@@ -57,6 +57,9 @@ def main():
     parser_complete = subparsers.add_parser('complete', help = "Mark a task completed")
     parser_complete.add_argument('id', default=None, help='Id of the task to mark completed')
     parser_complete.add_argument('-u', '--uncomplete', action='store_true', help='Mark a task uncompleted')
+
+    parser_edit = subparsers.add_parser('edit', help = "Edit an existing task")
+    parser_edit.add_argument('id', default=None, help='Id of the task to mark completed')
     
     parser_details= subparsers.add_parser('details', help = "View details for a task")
     parser_details.add_argument('id', default=None, help = 'Id of the task whose details you want to see')
@@ -92,6 +95,8 @@ def main():
         task_manager.list(args.list, args.priority, args.due_date)
     elif args.subparser_name == 'complete':
         task_manager.complete(args.id, args.uncomplete)
+    elif args.subparser_name == 'edit':
+        task_manager.edit(args.id)
     elif args.subparser_name == 'details':
         task_manager.details(args.id)
     elif args.subparser_name == 'do':

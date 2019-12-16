@@ -26,12 +26,12 @@ class Task:
         return '{} Due: {}, {}, Details: {}, List: {}, Complete: {}'.format(self.name, self.due_date, self.priority, self.details, self.list, self.complete)
 
     def print_detail(self):
-        return (Text.BOLD + 'Name:' + Text.END + ' {name:30}' + Text.BOLD + 'Complete:' + Text.END +' {complete}\n'+
-                Text.BOLD + 'Due Date:' + Text.END + ' {due_date}\n'+
-                Text.BOLD + 'Priority:' + Text.END + ' {priority}\n'+
-                Text.BOLD + 'List:' + Text.END + ' {list}\n'+
-                Text.BOLD + 'Action:' + Text.END + ' {action}\n'+
-                Text.BOLD + 'Details:' + Text.END + ' {details}\n').format( name=self.name, complete=bool(self.complete), due_date=self.due_date, priority=self.priority.name, list=self.list, action=self.action, details=self.details)
+        return ('Name: {name:30}Complete: {complete}\n'+
+                'Due Date: {due_date}\n'+
+                'Priority: {priority}\n'+
+                'List: {list}\n'+
+                'Action: {action}\n'+
+                'Details: {details}\n').format( name=self.name, complete=bool(self.complete), due_date=self.due_date, priority=self.priority.name, list=self.list, action=self.action, details=self.details)
 
     def print_abbrv(self):
         completed = colored('\u2713', attrs=['bold']) if self.complete else ' '

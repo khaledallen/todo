@@ -103,6 +103,44 @@ class TaskManager:
                 print('Cancelled')
             self.list()
 
+    def edit(self, task_id):
+        try:
+            task = self.dbm.get_task(int(task_id))
+        except TypeError:
+            print('Error: Can\'t find task with ID {}. Make sure you entered the correct ID.'.format(task_id))
+        else:
+            new_task_name = input('New task name: ')
+            new_task_due_date = input('New due date (enter ! to cleare): ')
+            new_task_priority = input('New priority ([H]i, [M]edium, [L]ow, ! to clear): ')
+            new_task_details = input('New details (enter ! to clear: ')
+            new_task_action = input('New shell action to do the task (enter ! to clear): ')
+            new_task_list = input('New task list/category (enter ! to clear): ')
+
+            task.name = self.set_new_task_property(task.name, new_task_name)
+            task.due_date = task.process_due_date(self.set_new_task_property(task.due_date, new_task_due_date))
+            task.priority = task.process_priority(self.set_new_task_property(task.priority, new_task_priority))
+            task.details = self.set_new_task_property(task.details, new_task_details)
+            task.action = self.set_new_task_property(task.action, new_task_action)
+            task.list = self.set_new_task_property(task.list, new_task_list)
+
+            print(task.print_detail())
+
+            self.dbm.update_task(task)
+
+            existinglist = self.dbm.get_list_by_name(task.list)
+            if existinglist == None:
+                self.dbm.add_list(task.list)
+
+    def set_new_task_property(self, old, new):
+        print('old', old)
+        print('new', new)
+        if new == '!':
+            return None
+        elif new == None or new == '' or new == old:
+            return old
+        else:
+            return new
+
     def clear(self, force):
         if not force:
             confirm = input('Are you sure you want to delete your completed tasks? (y/n)')
