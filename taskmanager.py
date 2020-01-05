@@ -68,6 +68,7 @@ class TaskManager:
         os.system(task.action)
 
     def complete(self, task_id, uncomplete = False):
+        print('completing task #', task_id)
         try:
             task = self.dbm.get_task(int(task_id))
         except TypeError:

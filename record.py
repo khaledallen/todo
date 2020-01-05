@@ -1,7 +1,4 @@
-'''
-https://stackoverflow.com/questions/892199/detect-record-audio-in-python
-'''
-
+''' https://stackoverflow.com/questions/892199/detect-record-audio-in-python '''
 from sys import byteorder
 from array import array
 from struct import pack
@@ -13,175 +10,155 @@ import json
 import pyaudio
 import wave
 
-# Imports the Google Cloud client library
-from google.cloud import speech
-from google.cloud.speech import enums
-from google.cloud.speech import types
-from google.cloud import texttospeech
+# Import Wit.ai Speech Tools
+from wit import Wit
 
-THRESHOLD = 800
-CHUNK_SIZE = 1024
-FORMAT = pyaudio.paInt16
-RATE = 44100
+class Voice:
+    THRESHOLD = 800
+    CHUNK_SIZE = 1024
+    FORMAT = pyaudio.paInt16
+    RATE = 44100
 
-def is_silent(snd_data):
-    return max(snd_data) < THRESHOLD
+    def is_silent(self, snd_data):
+        return max(snd_data) < self.THRESHOLD
 
-def normalize(snd_data):
-    "Average the volume out"
-    MAXIMUM = 16384
-    times = float(MAXIMUM)/max(abs(i) for i in snd_data)
+    def normalize(self, snd_data):
+        "Average the volume out"
+        MAXIMUM = 16384
+        times = float(MAXIMUM)/max(abs(i) for i in snd_data)
 
-    r = array('h')
-    for i in snd_data:
-        r.append(int(i*times))
-    return r
-
-def trim(snd_data):
-    "Trim the blank spots at the start and end"
-    def _trim(snd_data):
-        snd_started = False
         r = array('h')
-
         for i in snd_data:
-            if not snd_started and abs(i)>THRESHOLD:
-                snd_started = True
-                r.append(i)
-
-            elif snd_started:
-                r.append(i)
+            r.append(int(i*times))
         return r
 
-    # Trim to the left
-    snd_data = _trim(snd_data)
+    def trim(self, snd_data):
+        "Trim the blank spots at the start and end"
+        def _trim(snd_data):
+            snd_started = False
+            r = array('h')
 
-    # Trim to the right
-    snd_data.reverse()
-    snd_data = _trim(snd_data)
-    snd_data.reverse()
-    return snd_data
+            for i in snd_data:
+                if not snd_started and abs(i)>self.THRESHOLD:
+                    snd_started = True
+                    r.append(i)
 
-def add_silence(snd_data, seconds):
-    "Add silence to the start and end of 'snd_data' of length 'seconds' (float)"
-    r = array('h', [0 for i in range(int(seconds*RATE))])
-    r.extend(snd_data)
-    r.extend([0 for i in range(int(seconds*RATE))])
-    return r
+                elif snd_started:
+                    r.append(i)
+            return r
 
-def record():
-    """
-    Record a word or words from the microphone and 
-    return the data as an array of signed shorts.
+        # Trim to the left
+        snd_data = _trim(snd_data)
 
-    Normalizes the audio, trims silence from the 
-    start and end, and pads with 0.5 seconds of 
-    blank sound to make sure VLC et al can play 
-    it without getting chopped off.
-    """
-    p = pyaudio.PyAudio()
-    stream = p.open(format=FORMAT, channels=1, rate=RATE,
-        input=True, output=True,
-        frames_per_buffer=CHUNK_SIZE)
+        # Trim to the right
+        snd_data.reverse()
+        snd_data = _trim(snd_data)
+        snd_data.reverse()
+        return snd_data
 
-    num_silent = 0
-    snd_started = False
-
-    r = array('h')
-
-    while 1:
-        # little endian, signed short
-        snd_data = array('h', stream.read(CHUNK_SIZE))
-        if byteorder == 'big':
-            snd_data.byteswap()
+    def add_silence(self, snd_data, seconds):
+        "Add silence to the start and end of 'snd_data' of length 'seconds' (float)"
+        r = array('h', [0 for i in range(int(seconds*self.RATE))])
         r.extend(snd_data)
+        r.extend([0 for i in range(int(seconds*self.RATE))])
+        return r
 
-        silent = is_silent(snd_data)
+    def record(self):
+        """
+        Record a word or words from the microphone and 
+        return the data as an array of signed shorts.
 
-        if silent and snd_started:
-            num_silent += 1
-        elif not silent and not snd_started:
-            snd_started = True
+        Normalizes the audio, trims silence from the 
+        start and end, and pads with 0.5 seconds of 
+        blank sound to make sure VLC et al can play 
+        it without getting chopped off.
+        """
+        p = pyaudio.PyAudio()
+        stream = p.open(format=self.FORMAT, channels=1, rate=self.RATE,
+            input=True, output=True,
+            frames_per_buffer=self.CHUNK_SIZE)
 
-        if snd_started and num_silent > 100:
-            break
+        num_silent = 0
+        snd_started = False
 
-    sample_width = p.get_sample_size(FORMAT)
-    stream.stop_stream()
-    stream.close()
-    p.terminate()
+        r = array('h')
 
-    r = normalize(r)
-    r = trim(r)
-    r = add_silence(r, 0.35)
-    return sample_width, r
+        while 1:
+            # little endian, signed short
+            snd_data = array('h', stream.read(self.CHUNK_SIZE))
+            if byteorder == 'big':
+                snd_data.byteswap()
+            r.extend(snd_data)
 
-def recognize(filename):
-    '''NOTE that we need to set the environment variable manually for this to work'''
-    client = speech.SpeechClient()
-    file_name = os.path.join( os.path.dirname(__file__), filename)
+            silent = self.is_silent(snd_data)
 
-    # Loads the audio into memory
-    with io.open(file_name, 'rb') as audio_file:
-        content = audio_file.read()
-        audio = types.RecognitionAudio(content=content)
+            if silent and snd_started:
+                num_silent += 1
+            elif not silent and not snd_started:
+                snd_started = True
 
-    config = types.RecognitionConfig(
-        encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=RATE,
-        language_code='en-US')
+            if snd_started and num_silent > 100:
+                break
 
-    # Detects speech in the audio file
-    response = client.recognize(config, audio)
-    return response.results[0].alternatives[0].transcript
+        sample_width = p.get_sample_size(self.FORMAT)
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
 
-def listen():
-    record_to_file('demo.wav')
-    return recognize('demo.wav')
+        r = self.normalize(r)
+        r = self.trim(r)
+        r = self.add_silence(r, 0.35)
+        return sample_width, r
 
-def speak(phrase):
-    """Synthesizes speech from the input string of text or ssml."""
-    speakerclient = texttospeech.TextToSpeechClient()
-    synthesis_input = texttospeech.types.SynthesisInput(text=phrase)
+    def recognize(self, filename):
+        '''NOTE that we need to set the environment variable manually for this to work'''
+        client = Wit("6UZMIFPNYZ3IP56DYVG5NUSOFOGW6DWJ")
+        file_name = os.path.join( os.path.dirname(__file__), filename)
 
-    voice = texttospeech.types.VoiceSelectionParams(
-            language_code='en-GB',
-            name='en-GB-Wavenet-C')
+        # Detects speech in the audio file
+        resp = None
+        with open('demo.wav', 'rb') as f:
+            resp = client.speech(f, None, {'Content-Type': 'audio/wav'})
+        print('Yay, got Wit.ai response: ' + str(resp))
+        return resp
 
-    # Select the type of audio file you want returned
-    audio_config = texttospeech.types.AudioConfig(
-        audio_encoding=texttospeech.enums.AudioEncoding.MP3)
+    def listen(self):
+        self.record_to_file('demo.wav')
+        return self.recognize('demo.wav')
 
-    response = speakerclient.synthesize_speech(synthesis_input, voice, audio_config)
+    def speak(self, phrase):
+        """Synthesizes speech from the input string of text or ssml."""
+        speakerclient = texttospeech.TextToSpeechClient()
+        synthesis_input = texttospeech.types.SynthesisInput(text=phrase)
 
-    # The response's audio_content is binary.
-    with open('output.mp3', 'wb') as out:
-        out.write(response.audio_content)
-        playsound('output.mp3')
+        voice = texttospeech.types.VoiceSelectionParams(
+                language_code='en-GB',
+                name='en-GB-Wavenet-C')
 
-def record_to_file(path):
-    "Records from the microphone and outputs the resulting data to 'path'"
-    sample_width, data = record()
-    data = pack('<' + ('h'*len(data)), *data)
+        # Select the type of audio file you want returned
+        audio_config = texttospeech.types.AudioConfig(
+            audio_encoding=texttospeech.enums.AudioEncoding.MP3)
 
-    wf = wave.open(path, 'wb')
-    wf.setnchannels(1)
-    wf.setsampwidth(sample_width)
-    wf.setframerate(RATE)
-    wf.writeframes(data)
-    wf.close()
+        response = speakerclient.synthesize_speech(synthesis_input, voice, audio_config)
 
-def interpret_command(command):
-    cmd_list = command.split()
-    if 'task' in cmd_list:
-        speak('What do you want to name the task?')
-        print(listen());
-        
-    elif len(cmd_list) == 1 and cmd_list[0].lower() == 'samantha':
-        speak('What would you like to do?')
+        # The response's audio_content is binary.
+        with open('output.mp3', 'wb') as out:
+            out.write(response.audio_content)
+            playsound('output.mp3')
 
-if __name__ == '__main__':
-    while True:
-        print("Listening...")
-        path = 'demo.wav'
-        command = listen()
-        interpret_command(command)
+    def record_to_file(self, path):
+        "Records from the microphone and outputs the resulting data to 'path'"
+        sample_width, data = self.record()
+        data = pack('<' + ('h'*len(data)), *data)
+
+        wf = wave.open(path, 'wb')
+        wf.setnchannels(1)
+        wf.setsampwidth(sample_width)
+        wf.setframerate(self.RATE)
+        wf.writeframes(data)
+        wf.close()
+
+    def get_intent(self):
+        response = self.listen()
+        intent = response['entities']['intent'][0]['value']
+        return intent
