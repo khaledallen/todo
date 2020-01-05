@@ -39,8 +39,6 @@ def main():
             if intent == "task_create":
                 todo = TaskManager(config['dbName'])
                 task_name = speech['entities']['task_name'][0]['value'] 
-                engine.say("Creating new task with name " + task_name)
-                engine.runAndWait()
                 todo.add(task_name, quick_input=True)
                 todo.list()
             if intent == "task_complete":
