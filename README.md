@@ -1,3 +1,7 @@
+Meant to be a voice-controlled task manager as a proof of concept for an AI personal assistant to be deployed on an AR headset.
+
+__Wit.ai now cannot be used, so this is deprecated.__
+
 Run with `python3 todo.py` + various commands (eg `python3 todo.py add -t [TASKNAME]` or `python3 todo.py add`).
 Test with the `unittest` modules. Eg, `python3 task_class_test.py` will run the tests in that module.
 
